@@ -1,24 +1,20 @@
 'use strict';
 
-const fs = require('fs');
-const path = require('path');
-const Router = require('koa-router');
+const KoaRouter = require('koa-router');
 
 const { apiVersion } = require('../config').server;
-const baseName = path.basename(__filename);
 
 function applyApiMiddleware(app) {
-  const router = new Router({
+  const router = new KoaRouter({
+    // prefix adds a prefix before every route
     prefix: `/api/${apiVersion}`,
   });
 
-  // Require all the folders and create a sub-router for each feature api
-  fs.readdirSync(__dirname)
-    .filter(file => file.indexOf('.') !== 0 && file !== baseName)
-    .forEach(file => {
-      const api = require(path.join(__dirname, file))(Router);
-      router.use(api.routes());
-    });
+  // set caduceus service api
+  const caduceusApi = require('./caduceus')(KoaRouter);
+
+  // this attaches caduceus' routes to main routes
+  router.use(caduceusApi.routes());
 
   app.use(router.routes()).use(router.allowedMethods());
 }
