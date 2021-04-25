@@ -42,9 +42,9 @@ exports.getResponse = ctx => {
     data: payload,
   })
     .then(function(response) {
-      console.log(response["data"]);
+      console.log(response['data']);
       ctx.status = 200;
-      ctx.body = response["data"];
+      ctx.body = response['data'];
     })
     .then(function(error) {
       console.log(error);
