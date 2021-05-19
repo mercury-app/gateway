@@ -1,17 +1,15 @@
-'use strict';
+const KoaRouter = require("koa-router");
 
-const KoaRouter = require('koa-router');
-
-const { apiVersion } = require('../config').server;
+const apiVersion = "v1";
 
 function applyApiMiddleware(app) {
   const router = new KoaRouter({
     // prefix adds a prefix before every route
-    prefix: `/api/${apiVersion}`,
+    prefix: `/api/${apiVersion}`
   });
 
   // set caduceus service api
-  const caduceusApi = require('./caduceus')(KoaRouter);
+  const caduceusApi = require("./caduceus")(KoaRouter);
 
   // this attaches caduceus' routes to main routes
   router.use(caduceusApi.routes());
