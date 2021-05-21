@@ -10,108 +10,42 @@ Middleware for mercuri's communication with various backend services.
 
 2. Install dependencies
 
-```
-npm install
-```
+   ```bash
+   npm install
+   ```
 
 3. Start the server
 
-```
-npm start
-```
+   ```bash
+   npm start
+   ```
 
-or in development mode
+   or in development mode
 
-```
-npm run dev
-```
+   ```bash
+   npm run dev
+   ```
 
 ### Sending requests
 
-There is **only one request endpoint per service.**
-The request endpoint follows this nomenclature - `/<api version>/<service name>/`
-**All requests are post requests** with the following request body 
+The base endpoint for each request to a service follows this nomenclature: `/<api_version>/<service_name>/`.
 
-```
-{
-    "request": {
-        "method": <get/post/put/delete>,
-        "endpoint": <API endpoint for the corresponding service>,
-        "payload": <optional payload for post and put requests>
-    }
-}
+Example of sending a post request to caduceus to add a node:
 
+```http
+POST /v1/caduceus/nodes
+Content-Type: application/json
+Accept: application/json
 ```
 
-### Example
+To the above request, we can expect a response of the form:
 
-1. Sending a POST request to caduceus to add a node
-
-Send a POST request to endpoint `localhost:3000/api/v1/caduceus/` with payload
-
-```
-{
-    "request": {
-        "method": "post",
-        "endpoint": "nodes/",
-        "payload": {}
-    }
-}
-```
-
-The response is the response returned by the caduceus service
-
-```
+```json
 {
     "response": {
-        "id": "eb1ea002452148cc96b51a9221099ec5",
-        "container_id": "63ffbfa06ed739533af2a1928fdd6c70deb04374ced834e7db93f4b1a1dd5acf"
+        "id": "5ac2801fa37f424c8c17ed4619f9fdc0",
+        "container_id": "bbe0b0734351660bb58badbcefebaca21d8c9ab4ce0a6bcf6db86e67921a19dd",
+        "notebook_url": "http://localhost:8888/notebooks/Untitled.ipynb?kernel_name=python3"
     }
 }
-```
-
-2. Sending a GET request to get information about created node.
-
-Send a POST request to endpoint `localhost:3000/api/v1/caduceus/` with payload
-(node id from request above)
-
-```
-{
-    "request": {
-        "method": "get",
-        "endpoint": "nodes/eb1ea002452148cc96b51a9221099ec5"
-    }
-}
-```
-
-The response will look like
-
-```
-{
-    "response": [
-        {
-            "id": "eb1ea002452148cc96b51a9221099ec5",
-            "input": null,
-            "output": null,
-            "docker_img_name": null,
-            "container": {
-                "container_id": "63ffbfa06ed739533af2a1928fdd6c70deb04374ced834e7db93f4b1a1dd5acf",
-                "container_state": {
-                    "Status": "running",
-                    "Running": true,
-                    "Paused": false,
-                    "Restarting": false,
-                    "OOMKilled": false,
-                    "Dead": false,
-                    "Pid": 1465,
-                    "ExitCode": 0,
-                    "Error": "",
-                    "StartedAt": "2021-04-25T16:03:23.990375746Z",
-                    "FinishedAt": "0001-01-01T00:00:00Z"
-                }
-            }
-        }
-    ]
-}
-
 ```
