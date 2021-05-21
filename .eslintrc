@@ -1,0 +1,17 @@
+{
+  "root": true,
+  "parserOptions": {
+    "ecmaVersion": 2017
+  },
+  "env": {
+    "es6": true,
+    "commonjs": true,
+    "browser": true
+  },
+  "plugins": ["no-loops", "promise"],
+  "extends": ["eslint:recommended", "plugin:promise/recommended", "prettier"],
+  "rules": {
+    "no-console": "warn",
+    "no-loops/no-loops": "error"
+  }
+}
