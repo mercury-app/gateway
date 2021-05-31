@@ -1,12 +1,12 @@
-# Merkoa (We are shit at naming things)
+# Mercury Gateway
 
-Middleware for mercuri's communication with various backend services.
+Middleware for mercury's communication with various backend services.
 
 ## Usage
 
 ### Installation and starting the server
 
-1. Make sure that the required services are running. Eg. Start caduceus server before starting this.
+1. Make sure that the required services are running. Eg. Start orchestration service before starting this.
 
 2. Install dependencies
 
@@ -30,10 +30,10 @@ Middleware for mercuri's communication with various backend services.
 
 The base endpoint for each request to a service follows this nomenclature: `/<api_version>/<service_name>/`.
 
-Example of sending a post request to caduceus to add a node:
+Example of sending a post request to orchestration service to add a node:
 
 ```http
-POST /v1/caduceus/nodes
+POST /v1/orchestration/nodes
 Content-Type: application/json
 Accept: application/json
 ```

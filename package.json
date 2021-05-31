@@ -1,7 +1,7 @@
 {
-  "name": "merkoa",
+  "name": "mercury-gateway",
   "version": "0.1.0",
-  "description": "Middleware for mercuri to communicate with the backend.",
+  "description": "Middleware for Mercury to communicate with the backend.",
   "main": "src/server.js",
   "scripts": {
     "format": "prettier --write \"**/*.+(js|yml|yaml|json)\"",
