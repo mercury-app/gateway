@@ -14,7 +14,22 @@ Middleware for mercury's communication with various backend services.
    npm install
    ```
 
-3. Start the server
+3. Specify paths to orchetration and workspace service repositories in `config/defaults.json`
+
+   ```
+    {
+        "orchestration": {
+            "dir": <path of orchestration repo>,
+            "port": "8888"
+        },
+        "workspace": {
+            "dir": <path of workspace repo>,
+            "port": "4000"
+        }
+    }
+   ```
+
+4. Start the server
 
    ```bash
    npm start
