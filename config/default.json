@@ -1,0 +1,10 @@
+{
+    "orchestration": {
+        "dir": "",
+        "port": "8888"
+    },
+    "workspace": {
+        "dir": "",
+        "port": "4000"
+    }
+}
