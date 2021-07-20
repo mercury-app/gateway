@@ -1,3 +1,66 @@
+const spawn = require("child_process").spawn;
+const spawnSync = require("child_process").spawnSync
+const fs = require("fs")
+const config = require("config");
+
+const orchestrationConfig = config.get('orchestration');
+const workspaceConfig = config.get("workspace")
+const currentTimestamp = new Date().toISOString();
+const orchestrationDir = orchestrationConfig.dir;
+const workspaceDir = workspaceConfig.dir;
+
+if (orchestrationDir.length == 0)
+  throw "orchestation directory needs to be specified"
+
+if (workspaceDir.length == 0)
+  throw "workspace directory needs to be specified"
+
+// stop running orchestration and workspace processes to free up ports
+const ports = [orchestrationConfig.port, workspaceConfig.port]
+
+ports.forEach(function (port) {
+  const processPid = spawnSync('lsof', ['-t', `-i:${port}`], { encoding: 'utf8' })
+  if (Number.isInteger(parseInt(processPid.stdout))) {
+    console.log(`Killing process ${parseInt(processPid.stdout)}`)
+    process.kill(parseInt(processPid.stdout))
+  }
+})
+
+// start orchestration
+console.log("Starting orchestration...")
+const orchestrationLogStream = fs.createWriteStream(`${currentTimestamp}_orchestration.log`, { flags: 'a' });
+const orchestrationProcess = spawn("poetry", ["run", "python3", "-m", "server.app"], {
+  cwd: orchestrationDir,
+  detached: true
+})
+
+orchestrationProcess.stdout.pipe(orchestrationLogStream)
+orchestrationProcess.stderr.pipe(orchestrationLogStream)
+
+orchestrationProcess.on('close', function (code) {
+  console.log('orchestration exited with code ' + code);
+});
+
+console.log("Started orchestration")
+
+
+// start workspace
+console.log("Starting workspace...")
+const workspaceLogStream = fs.createWriteStream(`${currentTimestamp}_workspace.log`, { flags: 'a' });
+const workspaceProcess = spawn("npm", ["run", "dev"], {
+  cwd: workspaceDir,
+  detached: true
+})
+
+workspaceProcess.stdout.pipe(workspaceLogStream)
+workspaceProcess.stderr.pipe(workspaceLogStream)
+
+workspaceProcess.on('close', function (code) {
+  console.log('workspace exited with code ' + code);
+});
+console.log("Started workspace")
+
+
 const Koa = require("koa");
 const bodyParser = require("koa-bodyparser");
 const compress = require("koa-compress");
@@ -34,7 +97,7 @@ const server = websockify(new Koa());
 
 var openSockets = {};
 const router = new Router();
-router.all(`/${apiVersion}/orchestration/nodes/:id/ws`, (ctx, ) => {
+router.all(`/${apiVersion}/orchestration/nodes/:id/ws`, (ctx,) => {
   const socketAddr = `${serviceWsUrls["orchestration"]}/nodes/${ctx.params.id}/ws`
 
   console.log(`attempting socket opening for ${socketAddr}`);
