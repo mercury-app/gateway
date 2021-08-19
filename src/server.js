@@ -28,7 +28,7 @@ ports.forEach(function (port) {
 
 // start orchestration
 console.log("Starting orchestration...")
-const orchestrationLogStream = fs.createWriteStream(`${currentTimestamp}_orchestration.log`, { flags: 'a' });
+const orchestrationLogStream = fs.createWriteStream(`orchestration.log`, { flags: 'a' });
 const orchestrationProcess = spawn("poetry", ["run", "python3", "-m", "server.app"], {
   cwd: orchestrationDir,
   detached: true
@@ -46,7 +46,7 @@ console.log("Started orchestration")
 
 // start workspace
 console.log("Starting workspace...")
-const workspaceLogStream = fs.createWriteStream(`${currentTimestamp}_workspace.log`, { flags: 'a' });
+const workspaceLogStream = fs.createWriteStream(`workspace.log`, { flags: 'a' });
 const workspaceProcess = spawn("npm", ["run", "dev"], {
   cwd: workspaceDir,
   detached: true
@@ -97,8 +97,8 @@ const server = websockify(new Koa());
 
 var openSockets = {};
 const router = new Router();
-router.all(`/${apiVersion}/orchestration/nodes/:id/ws`, (ctx,) => {
-  const socketAddr = `${serviceWsUrls["orchestration"]}/nodes/${ctx.params.id}/ws`
+router.all(`/${apiVersion}/orchestration/workflows/:workflowId/nodes/:nodeId/ws`, (ctx,) => {
+  const socketAddr = `${serviceWsUrls["orchestration"]}/workflows/${ctx.params.workflowId}/nodes/${ctx.params.nodeId}/ws`
 
   console.log(`attempting socket opening for ${socketAddr}`);
   if (!(socketAddr in openSockets)) {
